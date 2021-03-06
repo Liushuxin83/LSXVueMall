@@ -1,29 +1,43 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view />
+    <!-- 底部导航区域 -->
+    <van-tabbar route active-color="#ee0a24" inactive-color="#000">
+      <van-tabbar-item replace to="/home" icon="wap-home-o"
+        >首页</van-tabbar-item
+      >
+      <van-tabbar-item replace to="/category" icon="apps-o"
+        >分类</van-tabbar-item
+      >
+      <van-tabbar-item replace to="/shopcart" icon="shopping-cart-o"
+        >购物车</van-tabbar-item
+      >
+      <van-tabbar-item replace to="/profile" icon="contact"
+        >我的</van-tabbar-item
+      >
+    </van-tabbar>
   </div>
 </template>
-
+<script>
+import Vue from "vue";
+import { Tabbar, TabbarItem } from "vant";
+Vue.use(Tabbar);
+Vue.use(TabbarItem);
+export default {
+  data() {
+    return {
+      active: "1",
+    };
+  },
+  methods: {},
+};
+</script>
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import "./assets/css/base.css";
+.van-tabbar {
+  background-color: #eee !important;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.van-tabbar-item--active {
+  background-color: #eee;
 }
 </style>
