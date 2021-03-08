@@ -56,3 +56,7 @@ a {
 .right {
     float: right;
 }
+
+.van-popup--top {
+    height: 50px;
+}

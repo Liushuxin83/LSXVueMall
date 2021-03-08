@@ -11,7 +11,7 @@ new Vue({
     render: h => h(App)
 }).$mount('#app')
 
-import { request } from '@/network/request.js'
+// import { request } from '@/network/request.js'
 // request({
 //     url: 'home/multidata',
 // }, (res) => {
@@ -19,10 +19,10 @@ import { request } from '@/network/request.js'
 // }, (err) => {
 //     console.log(err);
 // })
-request({
-    url: 'home/multidata'
-}).then(res => {
-    console.log(res);
-}).catch(err => {
-    console.log(err);
-})
+// request({
+//     url: 'home/multidata'
+// }).then(res => {
+//     console.log(res);
+// }).catch(err => {
+//     console.log(err);
+// })
