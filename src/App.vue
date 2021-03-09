@@ -2,7 +2,7 @@
   <div id="app">
     <router-view />
     <!-- 底部导航区域 -->
-    <van-tabbar route active-color="#ee0a24" inactive-color="#000">
+    <van-tabbar route active-color="#ee0a24" inactive-color="#000" >
       <van-tabbar-item replace to="/home" icon="wap-home-o"
         >首页</van-tabbar-item
       >
@@ -35,6 +35,7 @@ export default {
 <style lang="scss">
 @import "./assets/css/base.css";
 .van-tabbar {
+	width: 100vw;
   background-color: #eee !important;
 }
 .van-tabbar-item--active {
