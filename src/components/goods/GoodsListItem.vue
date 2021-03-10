@@ -1,6 +1,6 @@
 <template>
   <div class="goodsItem">
-    <img :src="goodsItem.show.img" />
+    <img :src="goodsItem.show.img" @load="imgLoad"/>
     <div>
       <p class="paragraph">{{ goodsItem.title }}</p>
     </div>
@@ -23,6 +23,12 @@ export default {
       },
     },
   },
+	methods: {
+		imgLoad(){
+			// console.log(111);
+			this.$bus.$emit('itemImgLoad')
+		},
+	},
 };
 </script>
 <style lang="scss" scoped>
