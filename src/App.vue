@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+		<keep-alive>
+		  <router-view />
+		</keep-alive>
     <!-- 底部导航区域 -->
     <van-tabbar route active-color="#ee0a24" inactive-color="#000" >
       <van-tabbar-item replace to="/home" icon="wap-home-o"
