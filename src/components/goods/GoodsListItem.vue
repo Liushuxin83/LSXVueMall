@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsItem">
+  <div class="goodsItem" @click="toDetailPage(goodsItem.iid)">
     <img :src="goodsItem.show.img" @load="imgLoad"/>
     <div>
       <p class="paragraph">{{ goodsItem.title }}</p>
@@ -27,6 +27,10 @@ export default {
 		imgLoad(){
 			// console.log(111);
 			this.$bus.$emit('itemImgLoad')
+		},
+		//跳转到详情页
+		toDetailPage(id){
+			this.$router.push(`/detail/${id}`);
 		},
 	},
 };

@@ -1,6 +1,6 @@
 
 <template>
- <!-- 这是封装之后的better-scroll -->
+  <!-- 这是封装之后的better-scroll -->
   <div class="wrapper" ref="wrapper">
     <div class="content">
       <slot></slot>
@@ -27,8 +27,10 @@ export default {
     };
   },
   mounted() {
-    // setTimeout(this._initBscroll, 200);
-    this._initBscroll();
+    // 保证在DOM渲染完毕后初始化better-scroll
+    setTimeout(() => {
+      this._initBscroll();
+    }, 200);
   },
   methods: {
     _initBscroll() {
@@ -62,6 +64,9 @@ export default {
     refresh() {
       // console.log('-----');
       this.scroll && this.scroll.refresh && this.scroll.refresh();
+    },
+    scrollTo(x, y, time) {
+      this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time);
     },
   },
 };

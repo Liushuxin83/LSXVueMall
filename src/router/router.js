@@ -9,6 +9,8 @@ const ShopCart = () =>
     import ('../views/ShopCart.vue')
 const Profile = () =>
     import ('../views/Profile.vue')
+const Detail = () =>
+    import ('../views/detail/Detail.vue')
 const routes = [
     //首页重定向
     //网址中如果乱写入一些字母也会跳到film
@@ -32,6 +34,11 @@ const routes = [
         path: '/profile',
         component: Profile
     },
+    {
+        name: 'detail',
+        path: '/detail/:detailId',
+        component: Detail
+    }
 ]
 export default new Router({
     routes,

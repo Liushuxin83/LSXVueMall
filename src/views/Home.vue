@@ -134,7 +134,7 @@ export default {
       // });
       const page = this.goods[type].page + 1;
       getHomeGoods(type, page).then((res) => {
-        // console.log(res);
+        // console.log(res.data.list);
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
       });
@@ -199,7 +199,7 @@ export default {
   //让home组件保持原来的状态 解决方案：离开时，保存一个位置信息，进来时将位置设置为原来保存的位置信息
   activated() {
     // console.log('进入home');
-    this.$refs.betterScrollRef.scroll.scrollTo(0, this.saveY);
+    this.$refs.betterScrollRef.scrollTo(0, this.saveY);
     //最好对better-scroll做一次刷新，避免出现不必要的bug
     this.$refs.betterScrollRef.refresh();
   },

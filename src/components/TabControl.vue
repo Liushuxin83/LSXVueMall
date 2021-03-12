@@ -1,5 +1,6 @@
 <template>
   <div class="tab-control">
+		<slot name="icon"></slot>
     <div
       v-for="(v, i) in titles"
       class="tab-control-item"

@@ -1,10 +1,15 @@
 <template>
   <div id="app">
-		<keep-alive>
-		  <router-view />
-		</keep-alive>
+    <keep-alive exclude="detail">
+      <router-view />
+    </keep-alive>
     <!-- 底部导航区域 -->
-    <van-tabbar route active-color="#ee0a24" inactive-color="#000" >
+    <van-tabbar
+      route
+      active-color="#ee0a24"
+      inactive-color="#000"
+      v-if="isVanTabbarShow"
+    >
       <van-tabbar-item replace to="/home" icon="wap-home-o"
         >首页</van-tabbar-item
       >
@@ -28,16 +33,26 @@ Vue.use(TabbarItem);
 export default {
   data() {
     return {
-      active: "1",
+      isVanTabbarShow: true,
     };
   },
   methods: {},
+  watch: {
+    //通过监听路由的变化来操作导航的隐藏
+    $route(to, from) {
+      if (to.name == "detail") {
+        this.isVanTabbarShow = false;
+      } else {
+        this.isVanTabbarShow = true;
+      }
+    },
+  },
 };
 </script>
 <style lang="scss">
 @import "./assets/css/base.css";
 .van-tabbar {
-	width: 100vw;
+  width: 100vw;
   background-color: #eee !important;
 }
 .van-tabbar-item--active {
