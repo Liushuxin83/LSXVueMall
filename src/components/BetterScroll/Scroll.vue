@@ -30,7 +30,7 @@ export default {
     // 保证在DOM渲染完毕后初始化better-scroll
     setTimeout(() => {
       this._initBscroll();
-    }, 200);
+    }, 500);
   },
   methods: {
     _initBscroll() {

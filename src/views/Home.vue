@@ -100,7 +100,6 @@ export default {
   },
   created() {
     this.getHomeMultiData();
-
     // this.getHomeGoods("pop");
     // this.getHomeGoods("new");
     // this.getHomeGoods("sell");
@@ -108,13 +107,14 @@ export default {
   mounted() {
     //图片加载完成之后的事件监听
     const refreshs = debounce(this.$refs.betterScrollRef.refresh, 200);
-    this.$bus.$on("itemImgLoad", () => {
+    this.$bus.$on("homeItemImgLoad", () => {
       // console.log('2222222222');
       //这里的refresh函数调用的有些频繁，需要用防抖函数处理一下（优化），比如模糊查询，每次往输入框输入一个字母都要想服务器发送请求，频繁的请求（这个时候需要使用防抖函数）
       // this.$refs.betterScrollRef.refresh();
       // console.log(refresh);
       refreshs();
     });
+		this.tabClicks(0);
   },
   methods: {
     // 网络请求相关！！！！！！！！！！！！！！！！！！

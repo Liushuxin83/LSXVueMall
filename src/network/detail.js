@@ -8,6 +8,11 @@ export function getDetailData(id) {
     })
 }
 
+export function getRecommendInfo(){
+	return request({
+		url:'recommend'
+	})
+}
 //由于后端返回的数据太杂，需要把自己需要的数据抽离成一个对象
 export class GoodsBaseInfo {
     constructor(itemInfo, columns, services) {
