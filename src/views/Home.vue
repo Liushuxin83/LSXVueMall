@@ -60,7 +60,7 @@ import Feature from "../views/home/Feature";
 import TabControl from "../components/TabControl";
 import GoodsListView from "../components/goods/GoodsListView";
 import Scroll from "../components/BetterScroll/Scroll";
-import BackTop from "../components/BackTop";
+import { backTopMixin } from "../common/mixin";
 
 import { debounce } from "../common/util";
 import { Notify } from "vant";
@@ -77,17 +77,17 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isBackTopShow: false,
+      //控制tabControl1是否显示
+      isTabControl1Show: false,
       //tab-control组件距离父元素顶端的距离
       tabControlOffsetTop: 0,
       //控制 homeswiper的图片加载完后 函数执行的次数
       isLoad: false,
-      //控制tabControl1是否显示
-      isTabControl1Show: false,
       //为了保持home组件的状态，当离开home组件时保存滚动位置
       saveY: 0,
     };
   },
+  mixins: [backTopMixin],
   components: {
     TopSticky,
     homeSwiper,
@@ -96,7 +96,6 @@ export default {
     TabControl,
     GoodsListView,
     Scroll,
-    BackTop,
   },
   created() {
     this.getHomeMultiData();
@@ -114,7 +113,7 @@ export default {
       // console.log(refresh);
       refreshs();
     });
-		this.tabClicks(0);
+    this.tabClicks(0);
   },
   methods: {
     // 网络请求相关！！！！！！！！！！！！！！！！！！
@@ -162,11 +161,6 @@ export default {
       //会出现一个小bug，使得两个tabControl的currentIndex不同,所以当点击tabControl时通过refs来设置其currentIndex为点击的下标
       this.$refs.tabControl1.currentIndex = i;
       this.$refs.tabControl2.currentIndex = i;
-    },
-    //监听backtop的函数
-    backTopClick() {
-      // console.log(this.$refs.betterScrollRef.scroll);
-      this.$refs.betterScrollRef.scroll.scrollTo(0, 0, 500);
     },
     //监听betterscroll滚动
     scrollPosition(position) {

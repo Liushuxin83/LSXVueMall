@@ -1,11 +1,20 @@
 <template>
   <div id="detail">
-    <tab-control :titles="['商品', '参数', '评论', '推荐']">
+    <tab-control
+      :titles="['商品', '参数', '评论', '推荐']"
+      @tabClicks="tabClicks"
+      ref="tabControlRef"
+    >
       <template slot="icon">
         <van-icon name="arrow-left" @click="backClick" />
       </template>
     </tab-control>
-    <better-scroll class="betterscroll" ref="betterScrollRef">
+    <better-scroll
+      class="betterscroll"
+      ref="betterScrollRef"
+      @scrollPosition="contentScroll"
+      :probeType="3"
+    >
       <detail-swiper :key="topSwiperImg.length" :options="{ loop: true }">
         <div class="swiper-slide" v-for="(v, i) in topSwiperImg" :key="i">
           <img :src="v" class="detailSwiperImg" @load="detailSwiperImgLoad" />
@@ -19,14 +28,18 @@
       <!-- 店铺信息展示 -->
       <shop-info :shop-info="shopInfo" class="shopinfo" />
       <!-- 描述（图片）信息展示 -->
-      <description-info
-        :descriptionInfo="descriptionInfo"
-      />
+      <description-info :descriptionInfo="descriptionInfo" />
       <!-- 参数信息 -->
-      <params-info :paramsInfo="paramsInfo" />
+      <params-info ref="paramsInfoRef" :paramsInfo="paramsInfo" />
+      <!-- 评论信息展示组件 -->
+      <comment ref="commentRef" :commentData="commentData" />
       <!-- 推荐商品图片组件 -->
-      <goods-list-view :goods="recommendInfo" />
+      <goods-list-view ref="goodsListViewRef" :goods="recommendInfo" />
     </better-scroll>
+    <!-- 底部商品导航 -->
+    <footer-nav />
+    <!-- 回到顶部组件   如果为组件添加原生事件，必须要加.native  监听组件根元素的原生事件-->
+    <back-top @click.native="backTopClick" v-show="isBackTopShow"></back-top>
   </div>
 </template>
 <script>
@@ -38,6 +51,9 @@ import ShopInfo from "../../views/detail/ShopInfo";
 import DescriptionInfo from "../../views/detail/DescriptionInfo";
 import ParamsInfo from "../../views/detail/ParamsInfo";
 import GoodsListView from "../../components/goods/GoodsListView";
+import Comment from "../../views/detail/Comment";
+import FooterNav from "../../views/detail/FooterNav";
+import { backTopMixin } from "../../common/mixin";
 
 import {
   getDetailData,
@@ -59,6 +75,12 @@ export default {
       descriptionInfo: {},
       paramsInfo: {},
       recommendInfo: [],
+      commentData: {},
+      //保存商品，参数，评论，推荐的offsetTop
+      themeTopY: [],
+      getThemeTopY: null,
+      //记录在滚动时的i值
+      currentIndex: 0,
     };
   },
   created() {
@@ -70,6 +92,17 @@ export default {
     this.getRecommendInfo();
   },
   mounted() {
+    this.getThemeTopY = debounce(() => {
+      //每次把这个数组设为空，是为了避免频繁的往这个数组中push数据
+      this.themeTopY = [];
+      this.themeTopY.push(0);
+      this.themeTopY.push(this.$refs.paramsInfoRef.$el.offsetTop);
+      this.themeTopY.push(this.$refs.commentRef.$el.offsetTop);
+      this.themeTopY.push(this.$refs.goodsListViewRef.$el.offsetTop);
+      this.themeTopY.push(Number.MAX_VALUE); //用空间换时间，多一些变量占据了一些空间，但目的是为了提高性能效率
+      // console.log(Number.MAX_VALUE);
+      console.log(this.themeTopY);
+    }, 100);
     //图片加载完成之后的事件监听
     const refreshs = debounce(this.$refs.betterScrollRef.refresh, 200);
     this.$bus.$on("detailItemImgLoad", () => {
@@ -78,10 +111,12 @@ export default {
       // this.$refs.betterScrollRef.refresh();
       refreshs();
     });
-		this.$bus.$on('descriptionInfoImgLoad',()=>{
-			refreshs();
-		})
+    this.$bus.$on("descriptionInfoImgLoad", () => {
+      refreshs();
+      this.getThemeTopY();
+    });
   },
+  mixins: [backTopMixin],
   components: {
     TabControl,
     DetailSwiper,
@@ -91,6 +126,8 @@ export default {
     DescriptionInfo,
     ParamsInfo,
     GoodsListView,
+    Comment,
+    FooterNav,
   },
   methods: {
     backClick() {
@@ -116,14 +153,66 @@ export default {
       this.shopInfo = result.shopInfo;
       //描述（图片）信息
       this.descriptionInfo = result.detailInfo;
+      //评论信息
+      this.commentData = result.rate;
       //参数信息
       this.paramsInfo = result.itemParams;
+      // this.$nextTick(() => {
+      // 	//根据最新的数据，对应的Dom已经被渲染出来了，但是图片依然是没有加载完的，所以在这里获取的offsetTop是不准确的
+      //   this.themeTopY.push(0);
+      //   this.themeTopY.push(this.$refs.paramsInfoRef.$el.offsetTop);
+      //   this.themeTopY.push(this.$refs.commentRef.$el.offsetTop);
+      //   this.themeTopY.push(this.$refs.goodsListViewRef.$el.offsetTop);
+      //   console.log(this.themeTopY);
+      // });
     },
     getRecommendInfo() {
       getRecommendInfo().then((res) => {
-        console.log(res.data.list);
+        // console.log(res.data.list);
         this.recommendInfo = res.data.list;
       });
+    },
+    //顶部导航点击
+    tabClicks(index) {
+      setTimeout(() => {
+        console.log(index);
+        this.$refs.betterScrollRef.scrollTo(0, -this.themeTopY[index], 500);
+        console.log(this.themeTopY);
+      }, 300);
+    },
+    //监听betterscroll的滚动  记录位置   这里不能滚动因为在封装betterscroll时，probeType为0，所以得传个属性
+    contentScroll(position) {
+      // console.log(position);
+      // [0,商品0 5878,参数1 6345,评论2 6676, 推荐3__ob__: Observer]
+      // console.log(-position.y);
+      const y = -position.y;
+      // for(let i = 0;i<this.themeTopY.length;i++){
+      // 	//这是普通做法
+      //   if ((this.currentIndex!==i)&&(i<this.themeTopY.length-1&&y >= this.themeTopY[i] && y < this.themeTopY[i + 1])||(i==this.themeTopY.length-1&&y >= this.themeTopY[i])) {
+      // 		console.log(i);
+      // 		this.currentIndex = i;
+      // 		//其中this.currentIndex!==i用来防止赋值过于频繁
+      // 		//通过this.$refs来修改子组件中的数据!!!!!!!!!
+      // 		this.$refs.tabControlRef.currentIndex = this.currentIndex;
+      //   }
+      // }
+
+      for (let i = 0; i < this.themeTopY.length - 1; i++) {
+        //这是第二种做法
+        if (
+          this.currentIndex !== i &&
+          y >= this.themeTopY[i] &&
+          y < this.themeTopY[i + 1]
+        ) {
+          console.log(i);
+          this.currentIndex = i;
+          //其中this.currentIndex!==i用来防止赋值过于频繁
+          //通过this.$refs来修改子组件中的数据!!!!!!!!!
+          this.$refs.tabControlRef.currentIndex = this.currentIndex;
+        }
+      }
+      //判断backTop组件是否显示
+      this.isBackTopShow = -position.y > 1000;
     },
   },
 };
@@ -145,7 +234,7 @@ export default {
   position: relative;
   // margin-bottom: 40px;
   height: calc(
-    100vh - 40px
+    100vh - 40px - 50px
   ); //切记使用 calc 的时候，里面的 - 左右两边一定要有个空格，快被这个bug搞死了,而且不能是%;
 }
 .shopinfo {
