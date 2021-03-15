@@ -78,6 +78,7 @@ export default {
       commentData: {},
       //保存商品，参数，评论，推荐的offsetTop
       themeTopY: [],
+			//用来存取 导航的四个标题对应主题的offsetTop
       getThemeTopY: null,
       //记录在滚动时的i值
       currentIndex: 0,
@@ -172,7 +173,7 @@ export default {
         this.recommendInfo = res.data.list;
       });
     },
-    //顶部导航点击
+    //顶部导航点击,与主题实现滚动联动,用定时器是为了解决获取不到$el问题，
     tabClicks(index) {
       setTimeout(() => {
         console.log(index);
