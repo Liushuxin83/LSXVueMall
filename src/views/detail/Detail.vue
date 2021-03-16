@@ -37,7 +37,7 @@
       <goods-list-view ref="goodsListViewRef" :goods="recommendInfo" />
     </better-scroll>
     <!-- 底部商品导航 -->
-    <footer-nav />
+    <footer-nav @addToCart="addToCart" />
     <!-- 回到顶部组件   如果为组件添加原生事件，必须要加.native  监听组件根元素的原生事件-->
     <back-top @click.native="backTopClick" v-show="isBackTopShow"></back-top>
   </div>
@@ -78,7 +78,7 @@ export default {
       commentData: {},
       //保存商品，参数，评论，推荐的offsetTop
       themeTopY: [],
-			//用来存取 导航的四个标题对应主题的offsetTop
+      //用来存取 导航的四个标题对应主题的offsetTop
       getThemeTopY: null,
       //记录在滚动时的i值
       currentIndex: 0,
@@ -102,7 +102,7 @@ export default {
       this.themeTopY.push(this.$refs.goodsListViewRef.$el.offsetTop);
       this.themeTopY.push(Number.MAX_VALUE); //用空间换时间，多一些变量占据了一些空间，但目的是为了提高性能效率
       // console.log(Number.MAX_VALUE);
-      console.log(this.themeTopY);
+      // console.log(this.themeTopY);
     }, 100);
     //图片加载完成之后的事件监听
     const refreshs = debounce(this.$refs.betterScrollRef.refresh, 200);
@@ -176,9 +176,9 @@ export default {
     //顶部导航点击,与主题实现滚动联动,用定时器是为了解决获取不到$el问题，
     tabClicks(index) {
       setTimeout(() => {
-        console.log(index);
+        // console.log(index);
         this.$refs.betterScrollRef.scrollTo(0, -this.themeTopY[index], 500);
-        console.log(this.themeTopY);
+        // console.log(this.themeTopY);
       }, 300);
     },
     //监听betterscroll的滚动  记录位置   这里不能滚动因为在封装betterscroll时，probeType为0，所以得传个属性
@@ -214,6 +214,19 @@ export default {
       }
       //判断backTop组件是否显示
       this.isBackTopShow = -position.y > 1000;
+    },
+    //点击添加到购物车
+    addToCart() {
+      // console.log(111);
+      //获取购物车需要展示的商品信息
+      const productInfo = {};
+      productInfo.image = this.topSwiperImg[0];
+      productInfo.title = this.goodsBaseInfo.title;
+      productInfo.desc = this.goodsBaseInfo.desc;
+      productInfo.price = this.goodsBaseInfo.newPrice;
+      productInfo.iid = this.iid;
+      //将商品添加到购物车
+      this.$store.commit("addCart", productInfo);
     },
   },
 };

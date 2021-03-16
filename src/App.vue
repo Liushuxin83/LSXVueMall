@@ -54,6 +54,7 @@ export default {
 .van-tabbar {
   width: 100vw;
   background-color: #eee !important;
+	z-index: 999;
 }
 .van-tabbar-item--active {
   background-color: #eee;
