@@ -2,7 +2,7 @@
   <div class="footerNav">
     <van-goods-action>
       <van-goods-action-icon icon="chat-o" text="客服" />
-      <van-goods-action-icon icon="cart-o" text="购物车" @click="toCartPage" />
+      <van-goods-action-icon icon="cart-o" text="购物车" :badge="cartListLength" @click="toCartPage" />
       <van-goods-action-icon icon="shop-o" text="店铺" />
       <van-goods-action-button
         type="warning"
@@ -15,6 +15,7 @@
 </template>
 <script>
 import Vue from "vue";
+import {mapGetters} from 'vuex'
 import { GoodsAction, GoodsActionIcon, GoodsActionButton } from "vant";
 Vue.use(GoodsAction);
 Vue.use(GoodsActionIcon);
@@ -31,6 +32,9 @@ export default {
       this.$router.push("/shopcart");
     },
   },
+	computed:{
+		...mapGetters(['cartListLength'])
+	}
 };
 </script>
 <style lang="scss" scoped>

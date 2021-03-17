@@ -40,6 +40,7 @@
     <footer-nav @addToCart="addToCart" />
     <!-- 回到顶部组件   如果为组件添加原生事件，必须要加.native  监听组件根元素的原生事件-->
     <back-top @click.native="backTopClick" v-show="isBackTopShow"></back-top>
+    <toast message="222222222222222"/>
   </div>
 </template>
 <script>
@@ -53,6 +54,7 @@ import ParamsInfo from "../../views/detail/ParamsInfo";
 import GoodsListView from "../../components/goods/GoodsListView";
 import Comment from "../../views/detail/Comment";
 import FooterNav from "../../views/detail/FooterNav";
+import Toast from '../../components/toast/Toast'
 import { backTopMixin } from "../../common/mixin";
 
 import {
@@ -129,6 +131,7 @@ export default {
     GoodsListView,
     Comment,
     FooterNav,
+    Toast
   },
   methods: {
     backClick() {
