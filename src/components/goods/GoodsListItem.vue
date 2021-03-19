@@ -1,6 +1,6 @@
 <template>
   <div class="goodsItem" @click="toDetailPage(goodsItem.iid)">
-    <img :src="showImage" @load="imgLoad" />
+    <img v-lazy="showImage" @load="imgLoad" />
     <div>
       <p class="paragraph">{{ goodsItem.title }}</p>
     </div>
