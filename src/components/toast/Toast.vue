@@ -18,7 +18,7 @@ export default {
     };
   },
   methods: {
-    show(message, duration) {
+    show(message='默认文字', duration=1500) {
       this.isShow = true;
       this.message = message;
       setTimeout(() => {
