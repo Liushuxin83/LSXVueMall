@@ -22,6 +22,10 @@ export default {
                 checkedTotalPrice = item.price * item.count + checkedTotalPrice;
             }
         });
-        return checkedTotalPrice*100
-    }
+        return checkedTotalPrice * 100
+    },
+    //包装dataList中的数据  每页显示四条数据
+    changeDataList(state) {
+        return state.dataList.slice((state.pageNum - 1) * state.pageSize, state.pageNum * state.pageSize)
+    },
 }

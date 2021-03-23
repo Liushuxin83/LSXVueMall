@@ -35,7 +35,9 @@ export default {
           return this.$store.state.cartList.every((item) => item.checked);
         }
       },
-      set() {},
+      set() {
+				// console.log(val);
+			},
     },
   },
   methods: {
