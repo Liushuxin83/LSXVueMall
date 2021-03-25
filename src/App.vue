@@ -43,7 +43,7 @@ export default {
   watch: {
     //通过监听路由的变化来操作导航的隐藏
     $route(to, from) {
-      if (to.name == "detail") {
+      if (to.name == "detail" || to.name== "register" || to.name=="login" || to.name=="editpersonalinfo") {
         this.isVanTabbarShow = false;
       } else {
         this.isVanTabbarShow = true;

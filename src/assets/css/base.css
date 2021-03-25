@@ -34,8 +34,9 @@ body {
     color: var(--color-text);
     /* rem vw/vh */
     width: 100vw;
-		height: 100vh;
+    height: 100vh;
 }
+
 a {
     color: var(--color-text);
     text-decoration: none;
@@ -64,4 +65,8 @@ a {
 
 .van-popup--top {
     height: 50px;
+}
+
+.van-nav-bar__content {
+    height: 50px !important;
 }

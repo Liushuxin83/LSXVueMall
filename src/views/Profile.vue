@@ -1,8 +1,66 @@
 <template>
-  <div>我的</div>
+  <div>
+    <top-sticky class="topNav">个人中心</top-sticky>
+    <login-part-one :personalInfo="personalInfo" />
+    <van-cell icon="coupon" title="编辑资料" is-link @click="$router.push('/editpersonalinfo')"/>
+  </div>
 </template>
 <script>
-export default {};
+import TopSticky from "../components/TopSticky";
+import LoginPartOne from "../views/profile/LoginPartOne";
+import { Cell } from "vant";
+import Vue from 'vue'
+Vue.use(Cell);
+export default {
+  data() {
+    return {
+      personalInfo: {},
+    };
+  },
+  components: {
+    TopSticky,
+    LoginPartOne,
+  },
+  mounted() {
+    this.userInfoData();
+  },
+  beforeRouteEnter(to, from, next) {
+    // console.log(to);
+    // console.log(from);
+    if (from.fullPath == "/login" && to.fullPath == "/profile") {
+      next((vm) => {
+        vm.userInfoData();
+      });
+    } else {
+      next();
+    }
+  },
+  methods: {
+    //等用户登录之后来获取用户数据
+    async userInfoData() {
+      if (localStorage.getItem("id")) {
+        const res = await this.$http({
+          url: `/user/${localStorage.getItem("id")}`,
+          // Headers: {
+          //   Authorization: "Bearer " + localStorage.getItem("token"),
+          // },
+        });
+        // console.log(res);
+        this.personalInfo = res[0];
+        // console.log(this.personalInfo);
+      } else {
+        this.personalInfo = {};
+      }
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
+.topNav {
+  border-bottom: 2px solid #eee;
+}
+.van-cell{
+	border-top: 10px solid #eee;
+	border-bottom: 1px solid #eee;
+}
 </style>
