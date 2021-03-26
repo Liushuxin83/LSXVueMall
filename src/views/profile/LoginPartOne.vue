@@ -20,7 +20,7 @@
 					<van-icon name="arrow" />
 				</div>
       </span> 
-			<div class="signature" v-if="personalInfo.user_desc">这个人很神秘，神秘也没有写</div>
+			<div class="signature" v-if="personalInfo.user_desc">{{personalInfo.user_desc}}</div>
 			<div class="signature" v-else>这个人很神秘，神秘也没有写</div>
     </div>
   </div>

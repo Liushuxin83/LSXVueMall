@@ -44,7 +44,7 @@
 </template>
 <script>
 import Vue from "vue";
-import { NavBar, Form, Field, Button } from "vant";
+import { NavBar, Form, Field, Button,} from "vant";
 
 Vue.use(NavBar).use(Form).use(Field).use(Button);
 export default {

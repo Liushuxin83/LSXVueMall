@@ -3,11 +3,13 @@
     <top-sticky class="topNav">个人中心</top-sticky>
     <login-part-one :personalInfo="personalInfo" />
     <van-cell icon="coupon" title="编辑资料" is-link @click="$router.push('/editpersonalinfo')"/>
+		<quit @quitLogin="quitLogin"/>
   </div>
 </template>
 <script>
 import TopSticky from "../components/TopSticky";
 import LoginPartOne from "../views/profile/LoginPartOne";
+import Quit from '../views/profile/Quit'
 import { Cell } from "vant";
 import Vue from 'vue'
 Vue.use(Cell);
@@ -20,6 +22,7 @@ export default {
   components: {
     TopSticky,
     LoginPartOne,
+		Quit
   },
   mounted() {
     this.userInfoData();
@@ -52,6 +55,10 @@ export default {
         this.personalInfo = {};
       }
     },
+		//退出登录
+		quitLogin(){
+			this.userInfoData();
+		},
   },
 };
 </script>
