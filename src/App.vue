@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive exclude="detail">
+    <keep-alive exclude="detail,profile,login">
       <router-view />
     </keep-alive>
     <!-- 底部导航区域 -->

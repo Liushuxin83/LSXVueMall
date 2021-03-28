@@ -41,7 +41,11 @@ export default {
 	},
 	methods: {
 		toRegisterPage(){
+			if(localStorage.getItem('token')){
+				return
+			}else{
 			this.$router.push('/register')
+			}
 		}
 	},
 };

@@ -14,6 +14,7 @@ import { Cell } from "vant";
 import Vue from 'vue'
 Vue.use(Cell);
 export default {
+	name:'profile',
   data() {
     return {
       personalInfo: {},
