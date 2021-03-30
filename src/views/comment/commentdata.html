@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+
+	<script>
+		// 处理一下评论的数据
+		// comment_id代表此条评论的id     user_id代表用户id即谁发表的    
+		// parent_id: null，代表一级评论    parent_id: "1"代表id为17的用户回复了comment_id: 1的帖子
+		// parent_id: "3"  代表id为14的用户回复了comment_id: 3的帖子
+		const arr = [
+			{ comment_id: 1, user_id: 43, comment_date: "04-23", comment_content: "蜡笔小新很好看!", parent_id: null },
+			{ comment_id: 2, user_id: 19, comment_date: "04-24", comment_content: "还不错哦!很好看", parent_id: null },
+			{ comment_id: 3, user_id: 17, comment_date: "04-25", comment_content: "我也感觉蜡笔小新很好看", parent_id: "1" },
+			{ comment_id: 4, user_id: 14, comment_date: "04-26", comment_content: "我感觉机器猫更好看一点", parent_id: "3" },
+			{ comment_id: 5, user_id: 13, comment_date: "04-27", comment_content: "好看,已三连!", parent_id: null },
+			{ comment_id: 6, user_id: 21, comment_date: "04-26", comment_content: "你是机器猫的粉丝吗", parent_id: "4" },
+			{ comment_id: 7, user_id: 14, comment_date: "04-27", comment_content: "是的,我是机器猫的粉丝", parent_id: "6" },
+			{ comment_id: 8, user_id: 23, comment_date: "04-27", comment_content: "我更喜欢白嫖!", parent_id: "5" },
+			{ comment_id: 9, user_id: 25, comment_date: "04-28", comment_content: "你个白嫖怪", parent_id: "8" }
+		];
+
+
+		[{
+			// 一级评论
+			comment_id: 1,
+			user_id: 43,
+			comment_date: "04-23",
+			comment_content: "蜡笔小新很好看!",
+			parent_id: null,
+			//二级评论
+			child: [{
+				comment_id: 3,
+				user_id: 17,
+				comment_date: "04-25",
+				comment_content: "我也感觉蜡笔小新很好看",
+				parent_id: "1",
+				//三级评论
+				child: [{
+					comment_id: 4,
+					user_id: 14,
+					comment_date: "04-26",
+					comment_content: "我感觉机器猫更好看一点",
+					parent_id: "3",
+					//四级评论
+					child: [{
+						comment_id: 6,
+						user_id: 21,
+						comment_date: "04-26",
+						comment_content: "你是机器猫的粉丝吗",
+						parent_id: "4",
+						//五级评论
+						child: [{ comment_id: 7, user_id: 14, comment_date: "04-27", comment_content: "是的,我是机器猫的粉丝", parent_id: "6" }]
+					}]
+				}]
+			}]
+		}]
+
+
+
+		//假如评论有好多层怎么办  用递归即可s
+		// let arr1 = [];
+		// for (let i = 0; i < arr.length; i++) {
+		// 	if (arr[i].parent_id == null) {
+		// 		//为null 说明是一级评论
+		// 		// console.log(arr[i]);
+		// 		arr1.push(arr[i])
+		// 		for (let j = 0; j < arr.length; j++) {
+		// 			// 二级评论的parent_id要对应这一级评论的comment_id
+		// 			if (arr[i].comment_id == arr[j].parent_id) {
+		// 				arr[i].child = [arr[j]]
+		// 				for(let p=0;p<arr.length;p++){
+		// 					// 三级评论的parent_id要对应这二级评论的comment_id
+		// 					if(arr[j].comment_id==arr[p].parent_id){
+		// 						arr[j].child = [arr[p]]
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// console.log(JSON.stringify(arr1,null,2));
+
+		function recursion(temp) {
+			let arr1 = [];
+			for (let i = 0; i < arr.length; i++) {
+				if (arr[i].parent_id == temp) {
+					//为null 说明是一级评论
+					// console.log(arr[i]);
+					arr1.push(arr[i]);
+					arr[i].child = recursion(arr[i].comment_id)
+				}
+			}
+			return arr1
+		}
+		const res = recursion(null);
+		console.log(JSON.stringify(res,null,2));
+	</script>
+</body>
+
+</html>

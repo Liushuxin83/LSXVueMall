@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive exclude="detail,profile,login">
+    <keep-alive exclude="detail,profile,login,comment">
       <router-view />
     </keep-alive>
     <!-- 底部导航区域 -->
@@ -21,6 +21,9 @@
       >
       <van-tabbar-item replace to="/shopcart" icon="shopping-cart-o"
         >购物车</van-tabbar-item
+      >
+			<van-tabbar-item replace to="/comment" icon="comment-o"
+        >评论</van-tabbar-item
       >
       <van-tabbar-item replace to="/profile" icon="contact"
         >我的</van-tabbar-item

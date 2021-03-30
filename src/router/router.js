@@ -19,6 +19,8 @@ const Login = () =>
     import ('../views/refisterandlogin/Login.vue')
 const EditPersonalInfo = ()=>
     import ('../views/profile/EditPersonalInfo.vue')
+const Comment = () =>
+    import ('../views/comment/Comment.vue')
 const routes = [
     //首页重定向
     //网址中如果乱写入一些字母也会跳到film
@@ -65,6 +67,11 @@ const routes = [
 			name:'editpersonalinfo',
 			path:'/editpersonalinfo',
 			component:EditPersonalInfo
+		},
+		{
+			name:'comment',
+			path:'/comment',
+			component:Comment
 		}
 ]
 const router = new Router({
