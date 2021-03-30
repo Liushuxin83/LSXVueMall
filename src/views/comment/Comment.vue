@@ -1,5 +1,6 @@
 <template>
   <div class="wraper">
+		<div>评论（{{length}}）</div>
     <div class="myCommentArea">
       <van-image
         v-if="myUserInfo"
@@ -28,7 +29,7 @@
         <button class="btn" @click="publishComment">发表</button>
       </div>
     </div>
-		<comment-data />
+		<comment-data @commentLength="commentLength"/>
   </div>
 </template>
 <script>
@@ -43,6 +44,7 @@ export default {
     return {
       myUserInfo: null,
       commentValue: "",
+			length:0,
     };
   },
   created() {
@@ -71,6 +73,11 @@ export default {
         });
       }
     },
+		//用来获取由子组件发出来的事件中的 评论数组的长度
+		commentLength(length){
+			// console.log(length);
+			this.length = length;
+		},
   },
 };
 </script>
