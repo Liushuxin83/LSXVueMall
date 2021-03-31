@@ -17,10 +17,12 @@ const Regesiter = () =>
     import ('../views/refisterandlogin/Register.vue')
 const Login = () =>
     import ('../views/refisterandlogin/Login.vue')
-const EditPersonalInfo = ()=>
+const EditPersonalInfo = () =>
     import ('../views/profile/EditPersonalInfo.vue')
 const Comment = () =>
     import ('../views/comment/Comment.vue')
+const SmallFunction = () =>
+    import ('../views/comment/SmallFunction.vue')
 const routes = [
     //首页重定向
     //网址中如果乱写入一些字母也会跳到film
@@ -63,16 +65,20 @@ const routes = [
         path: '/login',
         component: Login
     },
-		{
-			name:'editpersonalinfo',
-			path:'/editpersonalinfo',
-			component:EditPersonalInfo
-		},
-		{
-			name:'comment',
-			path:'/comment',
-			component:Comment
-		}
+    {
+        name: 'editpersonalinfo',
+        path: '/editpersonalinfo',
+        component: EditPersonalInfo
+    },
+    {
+        name: 'comment',
+        path: '/comment',
+        component: Comment,
+    },
+    {
+        path: '/smallfunction',
+        component: SmallFunction
+    }
 ]
 const router = new Router({
     routes,
@@ -81,20 +87,20 @@ const router = new Router({
 
 export default router
 router.beforeEach((to, from, next) => {
-    const willingPath = ['/shopcart','/editpersonalinfo']; //若多个地方需要授权的话，设置全局路由守卫
+    const willingPath = ['/shopcart', '/editpersonalinfo']; //若多个地方需要授权的话，设置全局路由守卫
     if (willingPath.includes(to.fullPath)) {
         //来验证token
         if (!localStorage.getItem('token')) {
-					Vue.prototype.$Toast({
-						type: "fail",
-						message: '请您先登录',
-						duration: 2000,
-					})
-						next('/profile')
-				}else{
-					next()
-				}
-    }else{
-			next()
-		}
+            Vue.prototype.$Toast({
+                type: "fail",
+                message: '请您先登录',
+                duration: 2000,
+            })
+            next('/profile')
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
 })

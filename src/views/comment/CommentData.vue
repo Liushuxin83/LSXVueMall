@@ -1,4 +1,5 @@
 <template>
+<!-- 一级评论 -->
   <div class="comment-data">
 		<div v-for="(item,index) in commentData" :key='index' v-if="item.userinfo">
 		<div class="commentItem">
@@ -10,11 +11,14 @@
 			<p>
 				<span>{{item.userinfo.name}}</span>
 				<span>{{item.comment_date}}</span>
-				<div class="commentContent">{{item.comment_content}}</div>
+				<div class="commentContent">
+					{{item.comment_content}}
+					<span class="reply" @click="replyOne(item.comment_id,item.userinfo.name)">回复</span>
+					</div>
 			</p>
 		</div>
 		</div>
-		 <comment-item :comment-item-child="item.child" class="comment-item"/>
+		 <comment-item :comment-item-child="item.child" class="comment-item"  @replyMore="replyMore"/>
 		</div>
 	</div>
 </template>
@@ -36,9 +40,9 @@ export default {
         url: "/comment/23",
       });
       console.log(res);
-			if(res){
-				this.$emit('commentLength',res.length)
-			}
+      if (res) {
+        this.$emit("commentLength", res.length);
+      }
       this.commentData = this.changeCommentData(res);
     },
     //改造一下评论数据 为树状结构
@@ -57,6 +61,16 @@ export default {
       }
       return recursion(null);
     },
+    //获取一级评论的评论id
+    replyOne(comment_id, userName) {
+      // console.log(comment_id);
+      this.$emit("reply", comment_id, userName);
+    },
+    replyMore(comment_id, userName) {
+      // console.log(comment_id, userName);
+      //需要继续往父组件发射事件
+      this.$emit("deepComment", comment_id, userName);
+    },
   },
   components: {
     CommentItem,
@@ -65,6 +79,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .comment-data {
+  position: relative;
   padding: 20px 10px;
   > div {
     border-bottom: 1px solid rgb(223, 216, 216);
@@ -96,8 +111,13 @@ export default {
       }
     }
   }
-	.comment-item{
-		margin-left: 40px;
-	}
+  .comment-item {
+    margin-left: 40px;
+  }
+  .reply {
+    position: absolute;
+    right: 10px;
+    color: red;
+  }
 }
 </style>

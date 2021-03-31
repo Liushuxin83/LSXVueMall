@@ -1,6 +1,7 @@
 <template>
   <div class="wraper">
-		<div>评论（{{length}}）</div>
+		<div style="color:red;fontSize:20px" @click="$router.push('/comment/smallfunction')">另外一个小功能</div>
+    <div>评论（{{ length }}）</div>
     <div class="myCommentArea">
       <van-image
         v-if="myUserInfo"
@@ -22,29 +23,42 @@
       <div class="inputComment">
         <van-search
           v-model="commentValue"
-          placeholder="说点什么吧"
+          :placeholder="placeholder"
           shape="round"
           :clearable="true"
         />
         <button class="btn" @click="publishComment">发表</button>
       </div>
     </div>
-		<comment-data @commentLength="commentLength"/>
+    <comment-data
+      @commentLength="commentLength"
+      ref="commentData"
+      @reply="reply"
+      @deepComment="deepComment"
+    />
   </div>
 </template>
 <script>
 import Vue from "vue";
-import CommentData from '../comment/CommentData'
+import CommentData from "../comment/CommentData";
 import { Image as VanImage, Search } from "vant";
 
 Vue.use(VanImage).use(Search);
 export default {
-	name:'comment',
+  name: "comment",
   data() {
     return {
       myUserInfo: null,
       commentValue: "",
-			length:0,
+      length: 0,
+      //发表评论在请求数据的时候需要传参  参数为comment_content   comment_date  parent_id
+      publishCommentUserModel: {
+        comment_content: "",
+        comment_date: "",
+        parent_id: null,
+        article_id: 23,
+      },
+      placeholder: "说点什么吧",
     };
   },
   created() {
@@ -52,9 +66,9 @@ export default {
       this.getUserInfo();
     }
   },
-	components:{
-		CommentData
-	},
+  components: {
+    CommentData,
+  },
   methods: {
     //获取用户信息
     async getUserInfo() {
@@ -64,20 +78,59 @@ export default {
       console.log(res[0]);
       this.myUserInfo = res[0];
     },
-    publishComment() {
+    async publishComment() {
       if (!localStorage.getItem("token") && !localStorage.getItem("id")) {
         this.$Toast({
           type: "fail",
           message: "请先登录",
           position: "top",
         });
+      } else {
+        // console.log(this.commentValue);
+        this.publishCommentUserModel.comment_content = this.commentValue;
+        const date = new Date();
+        let m = date.getMonth() + 1;
+        let d = date.getDate();
+        if (m < 10) {
+          m = `0${m}`;
+        }
+        if (d < 10) {
+          d = `0${d}`;
+        }
+        let str = `${m}-${d}`;
+        // console.log(str);
+        this.publishCommentUserModel.comment_date = str;
+        const res = await this.$http({
+          method: "post",
+          url: `/comment_post/${localStorage.getItem("id")}`,
+          data: this.publishCommentUserModel,
+        });
+        // console.log(res);
+        if (res.serverStatus == 2) {
+          this.$refs.commentData.getCommentData();
+					//在发表评论请求完成之后 ，需要把某些数据变成初始的样子
+          this.commentValue = "";
+          this.placeholder = "说点什么吧";
+          this.publishCommentUserModel.parent_id = null;
+        }
       }
     },
-		//用来获取由子组件发出来的事件中的 评论数组的长度
-		commentLength(length){
-			// console.log(length);
-			this.length = length;
-		},
+    //用来获取由子组件发出来的事件中的 评论数组的长度
+    commentLength(length) {
+      // console.log(length);
+      this.length = length;
+    },
+    //可以获取由子组件传过来的comment_id   字传父  这个时候需要把要回复的commen_id赋值给要发送请求中的publishCommentUserModel.parent_id
+    reply(comment_id, userName) {
+      console.log(comment_id, userName);
+      this.publishCommentUserModel.parent_id = comment_id;
+      this.placeholder = `@${userName}`;
+    },
+    deepComment(comment_id, userName) {
+      console.log(comment_id, userName);
+      this.publishCommentUserModel.parent_id = comment_id;
+      this.placeholder = `@${userName}`;
+    },
   },
 };
 </script>
